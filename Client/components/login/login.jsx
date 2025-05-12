@@ -19,41 +19,49 @@ export default function Login() {
         alertDivRef.current.innerText = message;
     }
 
-const checkUserExists = async (username, password) => {
-    try {
-        console.log("un", username)
 
-        const response = await fetch(`http://localhost:3000/users/get/${username}` ,{
+    //if the user is valid - navigate to home page.
+    const checkUserExists = async (username, password) => {
+    try {
+                debugger
+
+        const response = await fetch(`http://localhost:3000/users/get/${username}`, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' },
         });
-
         if (!response.ok) {
             return { ok: false, user: null };
         }
 
         const user = await response.json();
-        console.log("userrr",user); // הדפס את המשתמש בקונסול
+        const encryptedPassword = CryptoJS.AES.encrypt(password, KEY, {
+            iv: IV,
+            mode: CryptoJS.mode.CBC,
+            padding: CryptoJS.pad.Pkcs7,
+        }).toString();
+
+        // השוואת הסיסמה
+        // if (user.hashed_password !== encryptedPassword && user.hashed_password !== password) {
+        //     return { ok: false, user: null };
+        // }
+
         return { ok: true, user };
 
     } catch (error) {
-        console.error(error); // הדפס את השגיאה אם יש
+        console.error(error);
         return { ok: false, user: null };
     }
 };
 
-
-    //if the user is valid - navigate to home page.
     const handleLoginSubmit = (event) => {
         event.preventDefault()
         checkUserExists(nameRef.current.value, passwordRef.current.value).then((exists) => {
             if (!exists.ok) {
                 manageMassages('user name or password incorrect, try again');
             } else {
-                console.log("wwwww", nameRef.current.value, passwordRef.current.value)
                 let currentUser = {
                     id: exists.user.id,
-                    username: passwordRef.current.value,
+                    username: nameRef.current.value,
                     email: exists.user.email,
                 }
                 localStorage.setItem('currentUser', JSON.stringify(currentUser));

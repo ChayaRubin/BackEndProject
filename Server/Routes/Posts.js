@@ -1,12 +1,16 @@
-// import express from 'express';
-// import * as PostsController from '../Controllers/Posts.js'; 
+import express from 'express';
+import * as PostsController from '../Controllers/Posts.js'; 
 
-// const router = express.Router();
+const router = express.Router();
 
-// router.get('/', PostsController.getAllPostsTo);
-// router.get('/:id', PostsController.getPostByIdTO); 
-// router.post('/', PostsController.addPostTO); 
-// router.put('/:id', PostsController.updatePostTO);
-// router.delete('/:id', PostsController.deletePostTo); 
+router.get('/getAllPosts', PostsController.getAllPostsTo);
+router.get('/getById/:id', PostsController.getPostByIdTO);
+//לא עובד שם משתמש
+router.get('/getByUserId/:userId', PostsController.getPostByUserIdTO);
+router.post('/addPost', PostsController.addPostTO);
+router.put("/updatePost/:id", PostsController.updatePostTO);
+router.delete("/deletePost/:id", PostsController.deletePostTo);
 
-// export default router;
+export default router;
+
+
