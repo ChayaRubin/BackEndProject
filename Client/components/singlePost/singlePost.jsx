@@ -28,7 +28,7 @@ function SinglePost({ post, setPosts, selectedPostId, setSelectedPostId }) {
     //Delete a single todo from DB and display.
     const handleDelete = async (id) => {
         try {
-            const response = await fetch(`http://localhost:3000/posts/${id}`, {
+            const response = await fetch(`http://localhost:3000/posts/deletePost/${id}`, {
                 method: 'DELETE',
             });
             if (!response.ok) {
@@ -43,7 +43,7 @@ function SinglePost({ post, setPosts, selectedPostId, setSelectedPostId }) {
     //update the Tilte field of a post in db and display.
     const handleUpdatePost = async (updatedPost) => {
         try {
-            const response = await fetch(`http://localhost:3000/posts/${updatedPost.id}`, {
+            const response = await fetch(`http://localhost:3000/posts/updatePost/${updatedPost.id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(updatedPost),
@@ -144,7 +144,7 @@ function SinglePost({ post, setPosts, selectedPostId, setSelectedPostId }) {
                 }
                 {showBody && (editingId !== post.id && (
                     <button onClick={() => handleStartEdit(post)}>
-                        <img src="/img/edit.png" alt="Edit" />
+                        <img src="./img/edit" alt="Edit" />
                     </button>
                 ))}
                 {editingId === post.id && (
@@ -158,18 +158,18 @@ function SinglePost({ post, setPosts, selectedPostId, setSelectedPostId }) {
                                 })
                             }
                         >
-                            <img src="/img/checkmark.png" alt="Save" />
+                            <img src="./img/checkmark.png" alt="Save" />
                         </button>
 
                         <button onClick={handleCancelEdit}>
-                            <img src="/img/cancel.png" alt="Cancel" />
+                            <img src="./img/cancel.png" alt="Cancel" />
                         </button>
                     </>
                 )}
                 {/*delete post btn*/}
                 {editingId !== post.id && (
                     <button onClick={() => handleDelete(post.id)} disabled={currentUser.id != post.userId}>
-                        <img src="/img/trash.png" alt="Delete" />
+                        <img src="./img/trash.png" alt="Delete" />
                     </button>
                 )}
             </div>

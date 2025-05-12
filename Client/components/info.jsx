@@ -18,30 +18,30 @@ const Info = () => {
                     throw new Error('Failed to fetch data from JSON Server');
                 }
                 const user = await response.json();
-                console.log(user);
-                if (user.length > 0) setUserData(user[0]); 
-                console.log(userData);
+                // if (user.length > 0) setUserData(user[0]); 
+                if (user && Object.keys(user).length > 0)
+                    setUserData(user);
+
             } catch (error) {
-    setError(error.message);
+                setError(error.message);
 
             }
             finally {
                 setLoading(false);
             }
         };
-        if (currentUser.username) 
+        if (currentUser.username)
             getUserData();
     }, [currentUser]);
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;
 
-
     return (
         <>
             <Nav />
             <h1>Info</h1>
-            <div>Name: {userData.username}</div>
+            <div>Name: {userData.name}</div>
             <div>Phone Number: {userData.phone}</div>
             <div>E-mail: {userData.email}</div>
 

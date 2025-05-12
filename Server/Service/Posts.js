@@ -4,7 +4,7 @@ import db from '../../DB/dbConnection.js'; // ודא שזו הדרך הנכונ�
 export const getPostById = async (postId) => {
     try {
         const [results] = await db.query('SELECT * FROM posts WHERE id = ?', [postId]);
-        return results[0]; // מחזיר את הפוסט הראשון שמצאנו
+        return results; // מחזיר את הפוסט הראשון שמצאנו
     } catch (err) {
         throw err;
     }

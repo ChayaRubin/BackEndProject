@@ -5,7 +5,6 @@ import {
 
 export const getPostByIdTO = async (req, res) => {
     const postId = req.params.id;
-
     try {
         const post = await getPostById(postId);
         if (post) {

@@ -5,7 +5,6 @@ const router = express.Router();
 
 router.get('/getAllPosts', PostsController.getAllPostsTo);
 router.get('/getById/:id', PostsController.getPostByIdTO);
-//לא עובד שם משתמש
 router.get('/getByUserId/:userId', PostsController.getPostByUserIdTO);
 router.post('/addPost', PostsController.addPostTO);
 router.put("/updatePost/:id", PostsController.updatePostTO);

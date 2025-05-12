@@ -1,19 +1,5 @@
  import {getUserWithPasswordByName, addUser } from '../Service/Users.js';
 
-// export const GetUserByIdTo = async (req, res) => {
-//     try {
-//         const userId = req.params.id;
-//         const user = await getUserById(userId);
-//         if (!user) {
-//             return res.status(404).json({ message: 'User not found' });
-//         }
-//         res.json(user);
-//     } catch (err) {
-//         console.error('Error getting user:', err);
-//         res.status(500).json({ message: 'Error retrieving user' });
-//     }
-// };
-
 import CryptoJS from 'crypto-js';
 const KEY = CryptoJS.enc.Utf8.parse('1234567890123456');
 const IV = CryptoJS.enc.Utf8.parse('6543210987654321');
