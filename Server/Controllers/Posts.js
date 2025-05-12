@@ -65,9 +65,9 @@ export const updatePostTO = async (req, res) => {
     const postId = req.params.id;
     const updatedPost = req.body;
 
-    if (!updatedPost || !updatedPost.title || !updatedPost.user_id) {
-        return res.status(400).send('Missing required fields: user_id, title');
-    }
+    // if (!updatedPost || !updatedPost.title || !updatedPost.user_id) {
+    //     return res.status(400).send('Missing required fields: user_id, title');
+    // }
 
     try {
         const result = await updatePost(postId, updatedPost);
