@@ -41,15 +41,21 @@ const Info = () => {
     // if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;
 
-    return (
-        <>
-            <Nav />
-            <h1>Info</h1>
-            <div>Name: {userData.name}</div>
-            <div>E-mail: {userData.email}</div>
+   return (
+    <>
+        <Nav />
+        <h1>Info</h1>
+        {userData ? (
+            <>
+                <div>Name: {userData.name}</div>
+                <div>E-mail: {userData.email}</div>
+            </>
+        ) : (
+            <p>Loading user info...</p>
+        )}
+    </>
+);
 
-        </>
-    );
 };
 
 export default Info;
