@@ -23,8 +23,6 @@ export default function Login() {
     //if the user is valid - navigate to home page.
     const checkUserExists = async (username, password) => {
     try {
-                debugger
-
         const response = await fetch(`http://localhost:3000/users/get/${username}`, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' },
@@ -40,7 +38,7 @@ export default function Login() {
             padding: CryptoJS.pad.Pkcs7,
         }).toString();
 
-        // השוואת הסיסמה
+        // // השוואת הסיסמה
         // if (user.hashed_password !== encryptedPassword && user.hashed_password !== password) {
         //     return { ok: false, user: null };
         // }
