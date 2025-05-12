@@ -9,6 +9,8 @@ import Info from './info';
 import TodoList from './todoList/todoList';
 import PostList from "./postList/postList"
 import NoPage from "./noPage"
+import Comments from "./comments/comments";
+
 function MainApp() {
   const { currentUser } = useCurrentUser();
 console.log(currentUser)
@@ -20,8 +22,7 @@ console.log(currentUser)
         <Route path="/register" element={<Register />}/>
         <Route path='/userDetails' element={(localStorage.getItem('currentUser')) ? <Login /> : <UserDetails />} />
         <Route path='/home' element={(currentUser.id != -1) ? <Home /> : <NoPage />} />
-        <Route path='/info' element={(currentUser.id != -1) ? <Info /> : <NoPage />} />
-
+        <Route path="/users/:userId/posts/:postId/comments" element={currentUser.id !== -1 ? <Comments /> : <Navigate to="/login" />} /> 
         <Route path={`/users/${currentUser.id}/todos`} element={<TodoList />} />
         <Route path={`/users/${currentUser.id}/posts/*`} element={<PostList />} />
         <Route path="*" element={<NoPage />} />

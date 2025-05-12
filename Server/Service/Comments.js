@@ -1,8 +1,13 @@
 import db from '../../DB/dbConnection.js';
 
 export const addComment = async (comment) => {
-  const [results] = await db.query('INSERT INTO comments SET ?', comment);
-  return results.insertId;
+    try {
+        const [results] = await db.query('INSERT INTO comments SET ?', comment);
+        return results.insertId;  
+    } catch (err) {
+        console.error('Error adding comment to DB:', err);
+        throw new Error('Failed to insert comment into database.');
+    }
 };
 
 export const getCommentsByPostId = async (postId) => {
@@ -14,11 +19,6 @@ export const getCommentById = async (id) => {
   const [results] = await db.query('SELECT * FROM comments WHERE id = ?', [id]);
   return results[0];
 };
-
-// export const updateComment = async (comment, id) => {
-//   const [results] = await db.query('UPDATE comments SET ? WHERE id = ?', [comment, id]);
-//   return results.affectedRows;
-// };
 
 export const updateComment = async (comment, id) => {
   try {

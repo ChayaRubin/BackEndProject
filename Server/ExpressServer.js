@@ -24,7 +24,7 @@ app.use((req, res, next) => {
 import cors from 'cors';
 
 app.use(cors({
-    origin: 'http://localhost:5174'
+    origin: 'http://localhost:5173'
   }));
 
 app.use('/todos', Todorouter);

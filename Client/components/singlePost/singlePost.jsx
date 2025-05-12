@@ -1,11 +1,11 @@
+
 import { React, useState, useEffect } from 'react'
-import { Link, Routes, Route, useNavigate, useLocation } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useCurrentUser } from '../userProvider.jsx';
 import Comments from "../comments/comments";
 import styles from './singlePost.module.css';
 import NoPage from '../noPage';
 
-//each todo in the todo list
 function SinglePost({ post, setPosts, selectedPostId, setSelectedPostId }) {
     const [editingId, setEditingId] = useState(null);
     const [error, setError] = useState(null);
@@ -15,17 +15,7 @@ function SinglePost({ post, setPosts, selectedPostId, setSelectedPostId }) {
     const navigate = useNavigate();
     const location = useLocation();
 
-    //show the comments when refreshing the page.
-    useEffect(() => {
-        if (location.pathname === `/users/${currentUser.id}/posts/${post.id}/comments`) {
-            if (!selectedPostId) {
-                setSelectedPostId(post.id);
-            }
-        }
-    }, [location.pathname, currentUser.id])
-
-
-    //Delete a single todo from DB and display.
+    // Delete a post from DB
     const handleDelete = async (id) => {
         try {
             const response = await fetch(`http://localhost:3000/posts/deletePost/${id}`, {
@@ -40,7 +30,7 @@ function SinglePost({ post, setPosts, selectedPostId, setSelectedPostId }) {
         }
     };
 
-    //update the Tilte field of a post in db and display.
+    // Update post title in DB
     const handleUpdatePost = async (updatedPost) => {
         try {
             const response = await fetch(`http://localhost:3000/posts/updatePost/${updatedPost.id}`, {
@@ -48,33 +38,29 @@ function SinglePost({ post, setPosts, selectedPostId, setSelectedPostId }) {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(updatedPost),
             });
-
             if (!response.ok) {
                 throw new Error(`Error: ${response.status}`);
             }
-
             const updatedResponsePost = await response.json();
-
             setPosts((prevPosts) =>
                 prevPosts.map((post) => (post.id === updatedResponsePost.id ? updatedResponsePost : post))
             );
-
         } catch (err) {
             setError(err.message);
         }
     };
 
-    //change the todo to an editing mode.Show V/X btns.
+    // Edit post title and body
     const handleStartEdit = (post) => {
         setEditingId(post.id);
         setNewPostData({ title: post.title, body: post.body });
     };
-    //Do not save the changes in the todo. Back to a regular display.
+
     const handleCancelEdit = () => {
         setEditingId(null);
         setNewPostData({ title: '', body: '' });
     };
-    //Save the changes. Back to a regular display.
+
     const handleSaveEdit = (post) => {
         handleUpdatePost(post);
         setEditingId(null);
@@ -83,16 +69,8 @@ function SinglePost({ post, setPosts, selectedPostId, setSelectedPostId }) {
 
     return (
         <>
-            {/*The comments */}
-            <div className={styles.commentsDiv}>
-                <Routes>
-                    <Route path=':postId/comments' element={selectedPostId == post.id && <Comments />} />
-                </Routes>
-            </div>
             {editingId === post.id ? (
                 <div>
-                    {/*input for edinting the post title*/}
-                    #{post.id}:
                     <input
                         type="text"
                         value={newPostData.title}
@@ -102,17 +80,14 @@ function SinglePost({ post, setPosts, selectedPostId, setSelectedPostId }) {
                                 title: e.target.value,
                             }))
                         }
-                        style={{ marginRight: '10px', flex: 1 }}
                     />
                 </div>
             ) : (
                 <span className={styles.title}>
                     #{post.id}: {typeof post.title === "string" ? post.title : JSON.stringify(post.title)}
                 </span>
-
             )}
 
-            {/*input for edinting the post body*/}
             {showBody && (editingId === post.id ? (
                 <input
                     type="text"
@@ -123,30 +98,31 @@ function SinglePost({ post, setPosts, selectedPostId, setSelectedPostId }) {
                             body: e.target.value,
                         }))
                     }
-                    style={{ marginRight: '10px', flex: 1 }}
                 />
             ) : (
                 <span>
-                    {typeof post.title === "string" ? post.body : JSON.stringify(post.body)}
+                    {typeof post.body === "string" ? post.body : JSON.stringify(post.body)}
                 </span>
             ))}
 
-
-            {/*editing btns*/}
-            <div className={styles.postActions} >
-                {showBody ?
-                    (<button onClick={() => {
+            <div className={styles.postActions}>
+                {showBody ? (
+                    <button onClick={() => {
                         setShowBody(false);
                         setEditingId(null);
-                    }
-                    }>Hide</button>)
-                    : (<button onClick={() => setShowBody(true)}>Body</button >)
-                }
+                    }}>
+                        Hide
+                    </button>
+                ) : (
+                    <button onClick={() => setShowBody(true)}>Body</button>
+                )}
+
                 {showBody && (editingId !== post.id && (
                     <button onClick={() => handleStartEdit(post)}>
                         <img src="./img/edit" alt="Edit" />
                     </button>
                 ))}
+
                 {editingId === post.id && (
                     <>
                         <button
@@ -166,34 +142,24 @@ function SinglePost({ post, setPosts, selectedPostId, setSelectedPostId }) {
                         </button>
                     </>
                 )}
-                {/*delete post btn*/}
+
                 {editingId !== post.id && (
-                    <button onClick={() => handleDelete(post.id)} disabled={currentUser.id != post.userId}>
+                    <button onClick={() => handleDelete(post.id)} disabled={currentUser.id !== post.userId}>
                         <img src="./img/trash.png" alt="Delete" />
                     </button>
                 )}
             </div>
-            {/*link to the post's comments*/}
-            {
-                editingId !== post.id && (
-                    <button className='linkBtns' onClick={() => setSelectedPostId(post.id)}>
-                        <Link
-                            to={`/users/${post.userId}/posts/${post.id}/comments`}
-                            state={{ postId: post.id }}
-                        >
-                            View Comments
-                        </Link>
-                    </button>
-                )}
 
-            {/*gray div for to close the comments div*/}
-            {selectedPostId && <div className={styles.overlay} onClick={() => {
-                setSelectedPostId(null)
-                navigate(-1);
-            }} />}
-
+            {/* Link to comments page */}
+            {editingId !== post.id && (
+                <button className="linkBtns">
+                    <Link to={`/users/${post.userId}/posts/${post.id}/comments`} state={{ postId: post.id }}>
+                        View Comments
+                    </Link>
+                </button>
+            )}
         </>
-    )
+    );
 }
 
-export default SinglePost
+export default SinglePost;
