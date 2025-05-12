@@ -1,53 +1,39 @@
-
 import db from '../../DB/dbConnection.js';
-import CryptoJS from 'crypto-js';
 
-const KEY = CryptoJS.enc.Utf8.parse('1234567890123456');
-const IV = CryptoJS.enc.Utf8.parse('6543210987654321');
+export const getUserByName = async (name) => {
+    const [rows] = await db.execute('SELECT * FROM users WHERE name = ?', [name]);
+    return rows[0];
+};
 
-// הצפנת הסיסמה לפני שמכניסים אותה למסד נתונים
 export const addUser = async (userData) => {
-    const { username, email, password } = userData;
-    // הצפנת הסיסמה
-    const encryptedPassword = CryptoJS.AES.encrypt(password, KEY, {
-        iv: IV,
-        mode: CryptoJS.mode.CBC,
-        padding: CryptoJS.pad.Pkcs7
-    }).toString();
+  const { username, email, password } = userData;
 
-    // הכנסה למסד הנתונים
-    const [result] = await db.execute(
-        'INSERT INTO users (username, email) VALUES (?, ?)',
-        [username, email]
-    );
+  // Insert into `users` table
+  const [result] = await db.execute(
+    'INSERT INTO users (name, email) VALUES (?, ?)',
+    [username, email]
+  );
 
-    const userId = result.insertId;
+  const userId = result.insertId;
 
-    // הכנסה לטבלת passwords
-    await db.execute(
-        'INSERT INTO passwords (user_id, hashed_password) VALUES (?, ?)',
-        [userId, encryptedPassword]
-    );
+  // Insert the encrypted password into `passwords` table
+  await db.execute(
+    'INSERT INTO passwords (user_id, hashed_password) VALUES (?, ?)',
+    [userId, password] // Save the encrypted password directly
+  );
 
-    return userId;
+  return userId;
+};
+
+export const getUserWithPasswordByName = async (username) => {
+  const [rows] = await db.execute(`
+    SELECT users.id, users.name, users.email, passwords.hashed_password
+    FROM users
+    JOIN passwords ON users.id = passwords.user_id
+    WHERE users.name = ?
+  `, [username]);
+
+  return rows[0];
 };
 
 
-export async function getUserWithPasswordByName(name) {
-    try {
-        const [users] = await db.query(`
-            SELECT u.id, u.name, u.email, p.hashed_password
-            FROM users u
-            JOIN passwords p ON u.id = p.user_id
-            WHERE u.name = ?
-        `, [name]);
-
-        if (users.length === 0) {
-            return null;
-        }
-
-        return users[0];
-    } catch (err) {
-        throw err;
-    }
-}

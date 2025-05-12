@@ -3,10 +3,6 @@ import { useNavigate, Link } from 'react-router-dom'
 import { useCurrentUser } from '../userProvider.jsx';
 import CryptoJS from 'crypto-js';
 import styles from './register.module.css'
-
-// import con from '../../../DB/dbConnection.js';
-
-// Sign Up Form
 export default function Register() {
   const nameRef = useRef();
   const passwordRef = useRef();
@@ -16,9 +12,7 @@ export default function Register() {
   const { setCurrentUser } = useCurrentUser();
   const KEY = CryptoJS.enc.Utf8.parse('1234567890123456');
   const IV = CryptoJS.enc.Utf8.parse('6543210987654321');
-  // const [error, setError] = useState(null);
 
-  //update the text in alert div.
   const manageMassages = (message) => {
     alertDivRef.current.innerText = message;
   }
@@ -34,25 +28,23 @@ const checkUserExists = async (username) => {
     });
 
     if (response.status === 409) {
-      return true; // המשתמש כבר קיים
+      return true;
     }
 
     if (!response.ok) {
       throw new Error('Failed to check user existence');
     }
 
-    return false; // המשתמש לא קיים
+    return false; 
   } catch (error) {
-    // setError(error.message);
     return false;
   }
 };
-  //check if the feild 'verify password' matches.
-  const verifyPassword = () => {
+
+const verifyPassword = () => {
     return (passwordRef.current.value === passwordVerRef.current.value);
   }
 
-  //a function which checks the validation of the user.
   const handleRegisterSubmit = (event) => {
     event.preventDefault()
     checkUserExists(nameRef.current.value).then((exists) => {
