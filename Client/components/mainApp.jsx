@@ -21,7 +21,6 @@ console.log(currentUser)
         <Route path='/userDetails' element={(localStorage.getItem('currentUser')) ? <Login /> : <UserDetails />} />
         <Route path='/home' element={(currentUser.id != -1) ? <Home /> : <NoPage />} />
         <Route path='/info' element={(currentUser.id != -1) ? <Info /> : <NoPage />} />
-
         <Route path={`/users/${currentUser.id}/todos`} element={<TodoList />} />
         <Route path={`/users/${currentUser.id}/posts/*`} element={<PostList />} />
         <Route path="*" element={<NoPage />} />

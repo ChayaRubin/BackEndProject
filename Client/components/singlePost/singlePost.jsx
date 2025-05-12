@@ -41,12 +41,44 @@ function SinglePost({ post, setPosts, selectedPostId, setSelectedPostId }) {
     };
 
     //update the Tilte field of a post in db and display.
+    // const handleUpdatePost = async (updatedPost) => {
+    //     console.log('Updated Post:', updatedPost);
+    //     try {
+
+    //         const response = await fetch(`http://localhost:3000/posts/updatePost/${updatedPost.user_id}`, {
+    //             method: 'PUT',
+    //             headers: { 'Content-Type': 'application/json' },
+    //             body: JSON.stringify(updatedPost),
+    //         });
+
+    //         if (!response.ok) {
+    //             throw new Error(`Error: ${response.status}`);
+    //         }
+
+    //         const updatedResponsePost = await response.json();
+
+    //         setPosts((prevPosts) =>
+    //             prevPosts.map((post) => (post.id === updatedResponsePost.id ? updatedResponsePost : post))
+    //         );
+
+    //     } catch (err) {
+    //         setError(err.message);
+    //     }
+    // };
     const handleUpdatePost = async (updatedPost) => {
+        console.log('Updated Post:', updatedPost);
+        const postData = {
+            user_id: updatedPost.user_id,
+            title: updatedPost.title,
+            body: updatedPost.body
+        };
         try {
+            console.log('postData Post:', postData);
             const response = await fetch(`http://localhost:3000/posts/updatePost/${updatedPost.id}`, {
+
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(updatedPost),
+                body: JSON.stringify(postData), // שלח את הנתונים בסדר הנכון
             });
 
             if (!response.ok) {
@@ -54,9 +86,8 @@ function SinglePost({ post, setPosts, selectedPostId, setSelectedPostId }) {
             }
 
             const updatedResponsePost = await response.json();
-
             setPosts((prevPosts) =>
-                prevPosts.map((post) => (post.id === updatedResponsePost.id ? updatedResponsePost : post))
+                prevPosts.map((p) => (p.id === updatedResponsePost.id ? updatedResponsePost : p))
             );
 
         } catch (err) {
@@ -152,10 +183,12 @@ function SinglePost({ post, setPosts, selectedPostId, setSelectedPostId }) {
                         <button
                             onClick={() =>
                                 handleSaveEdit({
-                                    ...post,
+                                    id: post.id,
+                                    user_id: post.user_id || currentUser.id,
                                     title: newPostData.title,
                                     body: newPostData.body,
                                 })
+
                             }
                         >
                             <img src="./img/checkmark.png" alt="Save" />
@@ -168,22 +201,32 @@ function SinglePost({ post, setPosts, selectedPostId, setSelectedPostId }) {
                 )}
                 {/*delete post btn*/}
                 {editingId !== post.id && (
-                    <button onClick={() => handleDelete(post.id)} disabled={currentUser.id != post.userId}>
+                    <button onClick={() => handleDelete(post.id)} disabled={currentUser.id != post.user_id}>
                         <img src="./img/trash.png" alt="Delete" />
                     </button>
                 )}
             </div>
             {/*link to the post's comments*/}
             {
-                editingId !== post.id && (
-                    <button className='linkBtns' onClick={() => setSelectedPostId(post.id)}>
-                        <Link
-                            to={`/users/${post.userId}/posts/${post.id}/comments`}
-                            state={{ postId: post.id }}
-                        >
-                            View Comments
-                        </Link>
-                    </button>
+                editingId !== post.id &&
+                (
+                    // <button className='linkBtns' onClick={() => setSelectedPostId(post.id)}>
+                    //     <Link
+                    //         to={`/users/${post.userId}/posts/${post.id}/comments`}
+                    //         state={{ postId: post.id }}
+                    //     >
+                    //         View Comments
+                    //     </Link>
+                    // </button>
+                    <Link
+                        className='linkBtns'
+                        to={`/users/${post.userId}/posts/${post.id}/comments`}
+                        state={{ postId: post.id }}
+                        onClick={() => setSelectedPostId(post.id)}
+                    >
+                        View Comments
+                    </Link>
+
                 )}
 
             {/*gray div for to close the comments div*/}

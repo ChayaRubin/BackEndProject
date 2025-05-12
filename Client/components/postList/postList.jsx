@@ -39,7 +39,7 @@ const PostList = () => {
         if (currentUser) {
             fetchPosts(currentUser.id);
         }
-    }, [currentUser]);
+    }, [currentUser,setPosts]);
 
     //Returns the selceted user's id from DB according to his username.
     const findSelectedUserId = async () => {
