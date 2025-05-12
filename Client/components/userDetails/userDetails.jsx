@@ -24,52 +24,15 @@ const UserDetails = () => {
     return emailRegex.test(email);
   };
 
-  // // Checks if the phone number is valid.
-  // const validatePhone = (phone) => {
-  //   const phoneRegex = /^\+?[0-9]{1,3}?[-\s]?[0-9]{9,12}$/;
-  //   return phoneRegex.test(phone);
-  // };
 
-  // Complete the register process.
-//   const writeUserToDB = async () => {
-//     // let newUser = {
-//     //   id: currentUser.id,
-//     //   username: currentUser.name,
-//     //   email: emailRef.current.value,
-//     //   // phone: phoneRef.current.value,
-//     //   // password: currentUser.password,
-//     // };
-//     const currentUser = {
-//   username: username, // שים לב לשם השדה
-//   password: encryptedPassword,
-// };
-// console.log('newUser:', newUser);
-//     try {
-//       const response = await fetch('http://localhost:3000/users/addUser', {
-//         method: 'POST',
-//         headers: {
-//           'Content-Type': 'application/json',
-//         },
-//         body: JSON.stringify(newUser),
-//       });
-//       if (!response.ok) throw new Error(`Error: ${response.status}`);
-
-//       setCurrentUser(newUser);
-//       localStorage.setItem('currentUser', JSON.stringify(newUser));
-//       navigate('/home');
-//     } catch (err) {
-//       setError(err.message); // עדכון עם שגיאה
-//     }
-//   };
 const writeUserToDB = async () => {
 let newUser = {
   username: currentUser.name,
   email: emailRef.current.value,
-  password: currentUser.password, // הוסף את השורה הזו
+  password: currentUser.password, 
 };
-console.log('newUser:', newUser);
   try {
-    const response = await fetch('http://localhost:3000/users/addUser', {
+    const response = await fetch('http://localhost:3000/users/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -79,7 +42,7 @@ console.log('newUser:', newUser);
 
     if (!response.ok) throw new Error(`Error: ${response.status}`);
 
-    setCurrentUser({ ...currentUser, email: newUser.email }); // עדכון עם אימייל
+    setCurrentUser({ ...currentUser, email: newUser.email }); 
     localStorage.setItem('currentUser', JSON.stringify({ ...currentUser, email: newUser.email }));
     navigate('/home');
   } catch (err) {
@@ -119,13 +82,7 @@ console.log('newUser:', newUser);
           placeholder="email"
           required
         />
-        {/* <input
-          className={styles.input}
-          ref={phoneRef}
-          type="tel"
-          placeholder="phone number"
-          required
-        /> */}
+      
         <div className={styles.alert} ref={alertDivRef}></div>
         <button className={styles.button} type="submit">
           submit

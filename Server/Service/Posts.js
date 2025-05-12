@@ -1,10 +1,9 @@
 
-import db from '../../DB/dbConnection.js'; // ודא שזו הדרך הנכונה למודול
-
+import db from '../../DB/dbConnection.js'; 
 export const getPostById = async (postId) => {
     try {
         const [results] = await db.query('SELECT * FROM posts WHERE id = ?', [postId]);
-        return results; // מחזיר את הפוסט הראשון שמצאנו
+        return results; 
     } catch (err) {
         throw err;
     }

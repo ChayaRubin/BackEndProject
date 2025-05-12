@@ -46,9 +46,7 @@ export const getAllPostsTo = async (req, res) => {
 
 export const addPostTO = async (req, res) => {
     const post = req.body;
-    // if (!post || !post.user_id || !post.title) 
-    //     return res.status(400).send('Missing required fields: user_id, title, completed.');
-    
+
     try {
         const postId = await addPost(post);
         console.log('Post added with ID:', postId);
@@ -64,11 +62,6 @@ export const addPostTO = async (req, res) => {
 export const updatePostTO = async (req, res) => {
     const postId = req.params.id;
     const updatedPost = req.body;
-
-    // if (!updatedPost || !updatedPost.title || !updatedPost.user_id) {
-    //     return res.status(400).send('Missing required fields: user_id, title');
-    // }
-
     try {
         const result = await updatePost(postId, updatedPost);
         if (result.affectedRows > 0) {

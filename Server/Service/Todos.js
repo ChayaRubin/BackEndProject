@@ -27,7 +27,6 @@ const getTodosByUserId = async (userId) => {
     return rows;
 };
 
-// ייצוא אחד בלבד – מומלץ באובייקט אחד
 export {
     getAllTodos,
     addTodo,

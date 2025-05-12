@@ -7,48 +7,46 @@ function SingleTodo({ todo, setTodos, newTitle, setNewTitle }) {
     const [editingId, setEditingId] = useState(null);
 
     //Delete the todo from DB and display.
-const handleDelete = async (id) => {
-    try {
-        const response = await fetch(`http://localhost:3000/todos/deleteTodo/${id}`, {
-            method: 'DELETE',
-        });
+    const handleDelete = async (id) => {
+        try {
+            const response = await fetch(`http://localhost:3000/todos/${id}`, {
+                method: 'DELETE',
+            });
 
-        if (!response.ok) {
-            throw new Error(`Error: ${response.status}`);
+            if (!response.ok) {
+                throw new Error(`Error: ${response.status}`);
+            }
+
+            setTodos((prevTodos) => prevTodos.filter((todo) => todo.id !== id));
+        } catch (err) {
+            setError(err.message);
         }
-
-        setTodos((prevTodos) => prevTodos.filter((todo) => todo.id !== id));
-    } catch (err) {
-        setError(err.message);
-    }
-};
+    };
 
 
     //update the Tilte field in of a Todo in db and state.
-   const handleUpdateTodo = async (updatedTodo) => {
-    try {
-        const response = await fetch(`http://localhost:3000/todos/updateTodo/${updatedTodo.id}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(updatedTodo),
-        });
+    const handleUpdateTodo = async (updatedTodo) => {
+        try {
+            const response = await fetch(`http://localhost:3000/todos/${updatedTodo.id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(updatedTodo),
+            });
 
-        if (!response.ok) {
-            throw new Error(`Error: ${response.status}`);
+            if (!response.ok) {
+                throw new Error(`Error: ${response.status}`);
+            }
+
+            setTodos((prevTodos) =>
+                prevTodos.map((todo) =>
+                    todo.id === updatedTodo.id ? { ...todo, ...updatedTodo } : todo
+                )
+            );
+
+        } catch (err) {
+            setError(err.message);
         }
-
-        // אין צורך לצפות לתגובה עם todo מעודכן כי השרת לא מחזיר אותו, אלא רק סטטוס.
-        // אז פשוט נעדכן את הרשימה הקיימת לפי הנתונים ששלחנו:
-        setTodos((prevTodos) =>
-            prevTodos.map((todo) =>
-                todo.id === updatedTodo.id ? { ...todo, ...updatedTodo } : todo
-            )
-        );
-
-    } catch (err) {
-        setError(err.message);
-    }
-};
+    };
 
 
     //change the todo to an editing mode.Show V/X btns.
@@ -75,14 +73,14 @@ const handleDelete = async (id) => {
 
     return (
         <>
-            <div >
+            <div style={{ color: 'black' }}>
                 <input
                     type="checkbox"
                     checked={todo.completed}
                     onChange={() => handleUpdateTodo({ ...todo, completed: !todo.completed })}
                     className={styles.todoCheckbox}
                 />
-                
+
                 {/*input for edinting the todo title*/}
                 {editingId === todo.id ? (
                     <>
@@ -107,25 +105,29 @@ const handleDelete = async (id) => {
             <div className={styles.todoActions}>
                 {editingId !== todo.id && (
                     <button onClick={() => handleStartEdit(todo)}>
-                        <img
+                        {/* <img
                             src="/img/edit.png"
                             alt="Edit"
-                        />
+                        /> */}   
+                           <span>✏️</span>
+
                     </button>
                 )}
                 {editingId === todo.id && (
                     <>
                         <button onClick={() => handleSaveEdit(todo)}>
-                            <img
+                            {/* <img
                                 src="/img/checkmark.png"
                                 alt="Save"
-                            />
+                            /> */}
+                            <span >✔️</span>
                         </button>
                         <button onClick={handleCancelEdit}>
-                            <img
+                            {/* <img
                                 src="/img/cancel.png"
                                 alt="Cancel"
-                            />
+                            /> */}
+                            <span>❌</span>
                         </button>
                     </>
                 )}
@@ -133,10 +135,11 @@ const handleDelete = async (id) => {
                 {/*delete post btn*/}
                 {editingId !== todo.id && (
                     <button onClick={() => handleDelete(todo.id)}>
-                        <img
+                        {/* <img
                             src="/img/trash.png"
                             alt="Delete"
-                        />
+                        /> */}
+                        <span>🗑️</span>
                     </button>
                 )}
             </div>

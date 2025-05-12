@@ -77,7 +77,7 @@ const handleAddTodo = async () => {
   if (!newTitle) return;
   try {
     console.log('currentUser:', currentUser);
-    const response = await fetch(`http://localhost:3000/todos/addTodo`, {
+    const response = await fetch(`http://localhost:3000/todos/`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

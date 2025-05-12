@@ -7,8 +7,8 @@ export async function connectToDatabase(database = null) {
     host: '127.0.0.1',
     user: process.env.DB_USER || 'root',
     password: process.env.DB_PASSWORD || '327880845',
-     database: 'user_system', // כדי לא צריך לכתוב USE
-    multipleStatements: true // חשוב לצורך הרצת כמה CREATE TABLEs בבת אחת
+     database: 'user_system', 
+    multipleStatements: true 
   });
 
   console.log(`Connected to database${database ? `: ${database}` : ''}`);

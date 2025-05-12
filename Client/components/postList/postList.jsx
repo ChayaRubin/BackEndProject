@@ -12,7 +12,7 @@ const PostList = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
-    const [filterCriteria, setFilterCriteria] = useState("id"); // קריטריון החיפוש
+    const [filterCriteria, setFilterCriteria] = useState("id"); 
     const [isAdding, setIsAdding] = useState(false);
     const [newPostData, setNewPostData] = useState({ title: '', body: '' });
     const [selectedUser, setSelectedUser] = useState({ username: currentUser.username, id: null });
@@ -22,7 +22,7 @@ const PostList = () => {
     const fetchPosts = async (id) => {
         try {
             setLoading(true);
-            const response = await fetch(`http://localhost:3000/posts/getByUserId/${id}`);
+            const response = await fetch(`http://localhost:3000/posts/${id}`);
             if (!response.ok) {
                 throw new Error("Failed to fetch posts");
             }
@@ -45,7 +45,8 @@ const PostList = () => {
     const findSelectedUserId = async () => {
         setDisplayedUsername(selectedUser.username);
         try {
-            const response = await fetch(`http://localhost:3000/users/get/${selectedUser.username}`);
+
+            const response = await fetch(`http://localhost:3000/users/${selectedUser.username}`);
             if (!response.ok) {
                 throw new Error("Failed to fetch posts");
             }
@@ -96,7 +97,7 @@ const PostList = () => {
     const handleAddPost = async () => {
         if (!newPostData.title || !newPostData.body) return;
         try {
-            const response = await fetch(`http://localhost:3000/posts/addPost`, {
+            const response = await fetch(`http://localhost:3000/posts/`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
