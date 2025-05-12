@@ -18,12 +18,11 @@ const PostList = () => {
     const [selectedUser, setSelectedUser] = useState({ username: currentUser.username, id: null });
     const [displayedUsername, setDisplayedUsername] = useState(currentUser.username);
     const [selectedPostId, setSelectedPostId] = useState(null);
-
     //fetch all posts of the current user when the component is load.
     const fetchPosts = async (id) => {
         try {
             setLoading(true);
-            const response = await fetch(`http://localhost:3000/posts?userId=${id}`);
+            const response = await fetch(`http://localhost:3000/posts/getByUserId/${id}`);
             if (!response.ok) {
                 throw new Error("Failed to fetch posts");
             }
@@ -46,12 +45,12 @@ const PostList = () => {
     const findSelectedUserId = async () => {
         setDisplayedUsername(selectedUser.username);
         try {
-            const response = await fetch(`http://localhost:3000/users?username=${selectedUser.username}&_exact=true`);
+            const response = await fetch(`http://localhost:3000/users/get/${selectedUser.username}`);
             if (!response.ok) {
                 throw new Error("Failed to fetch posts");
             }
             const data = await response.json();
-            fetchPosts(data[0].id);
+            fetchPosts(data.id);
         } catch (err) {
             setError(err.message);
         } finally {
@@ -97,11 +96,11 @@ const PostList = () => {
     const handleAddPost = async () => {
         if (!newPostData.title || !newPostData.body) return;
         try {
-            const response = await fetch(`http://localhost:3000/posts`, {
+            const response = await fetch(`http://localhost:3000/posts/addPost`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    userId: Number(currentUser.id),
+                    user_id: Number(currentUser.id),
                     title: newPostData.title,
                     body: newPostData.body
                 }),
@@ -188,7 +187,7 @@ const PostList = () => {
                 <ul className={styles.postList}>
                     {displayedPosts.length > 0 ? (
                         displayedPosts.map((post, index) => (
-                    
+
                             <li key={index} className={styles.postItem}>
                                 <SinglePost
                                     post={post}

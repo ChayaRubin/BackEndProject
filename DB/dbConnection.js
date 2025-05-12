@@ -6,7 +6,7 @@ export async function connectToDatabase(database = null) {
   const connection = await mysql.createConnection({
     host: '127.0.0.1',
     user: process.env.DB_USER || 'root',
-    password: process.env.DB_PASSWORD || 'Chaya26!',
+    password: process.env.DB_PASSWORD || '327880845',
      database: 'user_system', // כדי לא צריך לכתוב USE
     multipleStatements: true // חשוב לצורך הרצת כמה CREATE TABLEs בבת אחת
   });

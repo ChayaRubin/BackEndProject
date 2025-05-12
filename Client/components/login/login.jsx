@@ -27,7 +27,7 @@ export default function Login() {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' },
         });
-
+        console.log('Response:', response);
         if (!response.ok) {
             return { ok: false, user: null };
         }
